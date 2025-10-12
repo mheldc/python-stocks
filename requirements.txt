@@ -1,0 +1,9 @@
+python-dotenv
+pyodbc
+pandas  # uncommented if used in py_stocks.py or py_connection.py
+requests
+sqlalchemy
+sqlalchemy-pyodbc
+
+
+
