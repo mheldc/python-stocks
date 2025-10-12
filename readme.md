@@ -15,11 +15,11 @@ This repository contains Python exercises and scripts related to stock data anal
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/mheldc/ubiquitous-carnival.git
+    git clone https://github.com/mheldc/python-stocks.git
     ```
-2. Navigate to the `stocks` directory:
+2. Navigate to the `python-stocks` directory:
     ```bash
-    cd python-exercises/stocks
+    cd python-stocks
     ```
 3. Install dependencies:
     ```bash
