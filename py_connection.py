@@ -4,6 +4,8 @@ import shutil
 import json
 from dotenv import load_dotenv
 load_dotenv()
+import py_pandas as pd
+
 
 def connect_to_db():
     db_server = os.getenv('db-host-name')
@@ -30,6 +32,7 @@ def close_db_connection(cn):
         print("Database connection closed.")
 
 def dump_stock_data_to_db(JSON_file, cn):
+    
     processed_folder = os.getenv('processed-folder-path')
     generated_folder = os.getenv('generated-folder-path')
 
@@ -95,3 +98,32 @@ def dump_stock_data_to_db(JSON_file, cn):
     else:
         # Notify user if the specified JSON file does not exist.
         print(f"File {JSON_file} does not exist.")
+
+def dump_df_data_to_db(df, cn):
+    if df is None or df.empty:
+        print("DataFrame is empty or None.")
+        return
+
+    if not cn:
+        print("No valid database connection.")
+        return
+
+    print("Loading DataFrame data to database...")
+
+    for index, row in df.iterrows():
+        stock_symbol = row['stock_code']
+        stock_date = row['date']
+        open_price = row['open']
+        high_price = row['high']
+        low_price = row['low']
+        close_price = row['close']
+        adj_close_price = row['adjusted_close']  
+        volume = row['volume']
+
+        query = f"Exec sp_upsert_stock_data  @stock_code = '{stock_symbol}', @stock_date = '{stock_date}', @stock_open = {open_price}, @stock_close = {close_price}, @stock_high = {high_price}, @stock_low = {low_price}, @stock_adj_close = {adj_close_price}, @stock_volume = {volume}"
+        
+        cursor = cn.cursor()
+        cursor.execute(query)
+        cn.commit()
+
+    print(f"Inserted {len(df)} record/s from DataFrame.")
